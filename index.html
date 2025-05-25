@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        user-select: none;
+        box-sizing: border-box;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      body {
+        margin-top: 50px;
+        text-align: center;
+        background-color: bisque;
+      }
+      h1 {
+        width: 90%;
+        margin: auto;
+        padding: 10px;
+        color: #eea854;
+        max-width: 350px;
+        letter-spacing: 3px;
+        border-radius: 20px;
+        box-shadow: -15px -15px 15px rgba(255, 255, 255, 0.2),
+                      8px 8px 12px rgba(0,0,0,0.1);
+      }
+      .container {
+        padding: 20px;
+        margin-top: 40px;
+        border-radius: 12px;
+        display: inline-block;
+        background-color: #f4f2f1;
+        box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.1);
+      }
+      
+      input {
+        width: 90%;
+        height: 45px;
+        padding: 0 5px;
+        color: #362107;
+        font-size: 18px;
+        text-align: right;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        border: 2px solid #f2bb76;
+        background-color: #fef0de;
+      }
+      button {
+        width: 45px;
+        margin: 5px;
+        height: 45px;
+        border: none;
+        color: #a06115;
+        font-size: 18px;
+        border-radius: 10px;
+        font-family: Monospace;
+        background-color: #fef0de;
+      }
+      button:active { background-color: #fdead2; }
+      button[onclick="result()"] { border: 2px solid #fdead2; }
+      button#del > img { pointer-events: none; }
+      button#del {
+        top: 2px;
+        position: relative;
+      }
+    </style>
+</head>
+<body>
+    <h1>Simple Calculator</h1>
+    <div class="container">
+        <input id="display" type="text" placeholder="0" disabled>
+        <input id="count" type="text" hidden>
+        <br>
+        <button onclick="clearInp(true)">AC</button>
+        <button id="del" onclick="clearInp()">
+          <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIApjbGFzcz0iZmVhdGhlciBmZWF0aGVyLWRlbGV0ZSIgCmZpbGw9Im5vbmUiIApjb2xvcj0iI2EwNjExNSIKaGVpZ2h0PSIyMCIgCnN0cm9rZT0iY3VycmVudENvbG9yIiAKc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiAKc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgCnN0cm9rZS13aWR0aD0iMS41IiAKdmlld0JveD0iMCAtMiAyNCAyNCIgCndpZHRoPSIyMCIgCgp4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNMjEgNEg4bC03IDggNyA4aDEzYTIgMiAwIDAgMCAyLTJWNmEyIDIgMCAwIDAtMi0yeiIvPgoKPGxpbmUgeDE9IjE4IiB4Mj0iMTIiIHkxPSI5IiB5Mj0iMTUiLz4KPGxpbmUgeDE9IjEyIiB4Mj0iMTgiIHkxPSI5IiB5Mj0iMTUiLz4KPC9zdmc+" alt="H">
+        </button>
+        <button onclick="getValue('(')">(</button>)
+        <button onclick="getValue(')')">(</button>)
+        <br>
+        <button onclick="getValue('√')">√</button>
+        <button onclick="getValue('π')">π</button>
+        <button onclick="getValue('%')">%</button>
+        <button onclick="getValue('/')">/</button>
+        <br>
+        <button onclick="getValue('7')">7</button>
+        <button onclick="getValue('8')">8</button>
+        <button onclick="getValue('9')">9</button>
+        <button onclick="getValue('×')">×</button>
+        <br>
+        <button onclick="getValue('4')">4</button>
+        <button onclick="getValue('5')">5</button>
+        <button onclick="getValue('6')">6</button>
+        <button onclick="getValue('-')">-</button>
+        <br>
+        <button onclick="getValue('1')">1</button>
+        <button onclick="getValue('2')">2</button>
+        <button onclick="getValue('3')">3</button>
+        <button onclick="getValue('+')">+</button>
+        <br>
+        <button onclick="getValue('00')">00</button>
+        <button onclick="getValue('0')">0</button>
+        <button onclick="getValue('.')">.</button>
+        <button onclick="result()">=</button>
+    </div>
+    <script>
+        const displayInp = document.getElementById('display');
+        const countInp = document.getElementById('count');
+        
+        console.log('Get Input as :')
+        
+        function getValue(val) {
+            if (val === '×') {
+                displayInp.value += '×';
+                if (displayInp.value[displayInp.value.length - 2] === '×') {
+                    displayInp.value = displayInp.value.slice(0, -2) + '^';
+                    countInp.value = countInp.value.slice(0, -1);
+                    val = '^';
+                } else {
+                    val = '*';
+                }
+            } else {
+                displayInp.value += val;
+            } 
+            countInp.value += val;
+            console.log('debug: '+parseInput(countInp.value))
+        }
+
+        function parseInput(input) {
+            if (input.includes('π')) {
+                input = input.replace(/π/g, 'Math.PI');
+                input = input.replace(/(\d|\))Math\.PI/g, "$1*Math.PI");
+                input = input.replace(/Math\.PI(\d|\()/g, "Math.PI*$1");
+            }
+            if (input.includes('%')) {
+                input = input.replace(/(Math\.PI|\(.*?\)|\d+(\.\d+)?)%/g, '($1/100)');
+            }
+            if (input.includes('^')) {
+                input = input.replace(/\^/g, '')
+            }
+            if (input.includes('(') && input.includes(')')) {
+                input = input.replace(/(\d)\(/g, '$1*(');
+                input = input.replace(/\)(\d)/g, ')*$1');
+            }
+            if (input.includes('√')) {
+                input = input.replace(/((Math\.PI|\d)|\))√/g, '$1*√');
+                input = input.replace(/√(Math\.PI|\d+(\.\d+)?|\([^)]+\))/g, "Math.sqrt($1)");
+            }
+            return input;
+        }
+
+        function result() {
+            if (countInp.value && displayInp.value) {
+                try {
+                    let result = eval(parseInput(countInp.value));
+
+                    displayInp.value = result;
+                    countInp.value = result;
+                } catch {
+                    alert('There is something wrong with the input.');
+                    displayInp.value = '';
+                    countInp.value = '';
+                }
+            }
+            console.log('debug: '+parseInput(countInp.value))
+        }
+        
+        function clearInp(all) {
+            if (!all) {
+                countInp.value = countInp.value.slice(0, -1);
+                displayInp.value = displayInp.value.slice(0, -1);
+            } else {
+                displayInp.value = '';
+                countInp.value = ''
+            }
+            console.log('debug: '+parseInput(countInp.value))
+        }
+    </script>
+</body>
+</html>
